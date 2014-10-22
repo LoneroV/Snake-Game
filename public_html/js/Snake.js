@@ -3,8 +3,6 @@
  *----------------------------------------------------------------------------
  */
 
-
-
 var snake;
 var snakeLength;
 var snakeSize;
@@ -40,6 +38,8 @@ function gameInitialize() {
     
     canvas.width = screenWidth;
     canvas.height = screenHeight;
+    
+    document.addEventListener("keydown", keyboardHandler);
 }
 
 function gameLoop() {
@@ -84,10 +84,18 @@ function snakeUpdate() {
    var snakeHeadX = snake[0].x;
    var snakeHeadY = snake[0].y;
    
-   if(snakeDirection == "down"){
+   if(snakeDirection == "down") {
        snakeHeadY++;
    }
-   
+   else if(snakeDirection == "right") {
+      snakeHeadX++; 
+   }
+   else if(snakeDirection == "left") {
+      snakeHeadX--; 
+   }
+   else if(snakeDirection == "up"){
+       snakeHeadY--;
+   }
    var snakeTail = snake.pop();
    snakeTail.x = snakeHeadX;
    snakeTail.y = snakeHeadY;
@@ -110,7 +118,7 @@ function foodInitialize() {
 
 function foodDraw() {
     context.fillstyle = "white";
-    context.fillRect(food.x, food.y, snakeSize, snakeSize);
+    context.fillRect(food.x * snakeSize, food.y * snakeSize, snakeSize, snakeSize);
 }
 
 
@@ -118,6 +126,27 @@ function setFoodPosition() {
     var randomX = Math.floor(Math.random() * screenWidth);
     var randomY = Math.floor(Math.random() * screenHeight);
     
-    food.x = randomX;
-    food.y = randomY;
+    food.x = randomX / snakeSize;
+    food.y = randomY / snakeSize;
+}
+/* -----------------------------------------------------------------------------
+ * Input Functions
+ * -----------------------------------------------------------------------------
+ */
+
+function keyboardHandler(event) {
+    console.log(event);
+    
+    if(event.keyCode == "39" && snakeDirection != "left") {
+        snakeDirection = "right";
+    }
+    else if(event.keyCode == "38" && snakeDirection != "up") {
+        snakeDirection = "up";
+    }
+    else if(event.keyCode == "37" && snakeDirection != "right") {
+        snakeDirection = "left";
+    }
+    else if(event.keyCode == "40" && snakeDirection != "up") {
+        snakeDirection = "down";
+    }
 }
