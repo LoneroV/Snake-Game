@@ -14,6 +14,8 @@ var context;
 var screenWidth;
 var screenHeight;
 
+var gameState;
+var gameOverMenu;
 /*----------------------------------------------------------------------------
  * Executing Game Code
  * ---------------------------------------------------------------------------
@@ -40,13 +42,20 @@ function gameInitialize() {
     canvas.height = screenHeight;
     
     document.addEventListener("keydown", keyboardHandler);
+    
+    
+    gameOverMenu = document.getElementById ("gameOver");
+    
+    setState("PLAY");
 }
 
 function gameLoop() {
-    gameDraw();
-    snakeUpdate();
-    snakeDraw();
-    foodDraw();
+    gameDraw();  
+    if(gameState == "PLAY"){
+        snakeUpdate();
+        snakeDraw();
+        foodDraw();
+    }
 }
 
 function gameDraw() {
@@ -96,6 +105,10 @@ function snakeUpdate() {
    else if(snakeDirection == "up"){
        snakeHeadY--;
    }
+   
+   checkFoodCollisions(snakeHeadX, snakeHeadY);
+   checkWallCollisions(snakeHeadX, snakeHeadY);
+   
    var snakeTail = snake.pop();
    snakeTail.x = snakeHeadX;
    snakeTail.y = snakeHeadY;
@@ -126,8 +139,8 @@ function setFoodPosition() {
     var randomX = Math.floor(Math.random() * screenWidth);
     var randomY = Math.floor(Math.random() * screenHeight);
     
-    food.x = randomX / snakeSize;
-    food.y = randomY / snakeSize;
+    food.x = Math.floor(randomX / snakeSize);
+    food.y = Math.floor(randomY / snakeSize);
 }
 /* -----------------------------------------------------------------------------
  * Input Functions
@@ -140,7 +153,7 @@ function keyboardHandler(event) {
     if(event.keyCode == "39" && snakeDirection != "left") {
         snakeDirection = "right";
     }
-    else if(event.keyCode == "38" && snakeDirection != "up") {
+    else if(event.keyCode == "38" && snakeDirection != "down") {
         snakeDirection = "up";
     }
     else if(event.keyCode == "37" && snakeDirection != "right") {
@@ -150,3 +163,44 @@ function keyboardHandler(event) {
         snakeDirection = "down";
     }
 }
+    
+    /*--------------------------------------------------------------------------
+     * Collision Handling
+     * -------------------------------------------------------------------------
+     */
+    function checkFoodCollisions(snakeHeadX, snakeHeadY) {
+        console.log("checkFood");
+        if(snakeHeadX == food.x && snakeHeadY == food.y){
+            snake.push({
+                x: 0,
+                y: 0
+            });
+            snakeLength++;
+            setFoodPosition();
+     }
+    }    
+    function checkWallCollisions(snakeHeadX, snakeHeadY) {
+        if(snakeHeadX * snakeSize >= screenWidth || snakeHeadX * snakeSize < 0) {
+            setState("GAME OVER");
+        }
+    }
+        
+ /*-----------------------------------------------------------------------------
+  * Game State Handeling
+  * ----------------------------------------------------------------------------
+  */
+ 
+ function setState(state){
+    gameState = state;
+    showMenu(state);
+ }
+ 
+ function displayMenu(menu){
+     menu.style.visibility = "visible";
+ }
+ 
+ function showMenu(state){
+     if(state == "GAME OVER"){
+         displayMenu(gameOverMenu);
+     }
+ }
