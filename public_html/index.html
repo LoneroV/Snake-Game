@@ -9,12 +9,16 @@ and open the template in the editor.
         <title>Vincent Lonero - Snake JS</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://www.google.com/fonts#QuickUsePlace:quickUse/Family:Vollkorn:700italic,400" rel="stylesheet" type="text/style.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
+        <section id="playHUD">
+            <h2 id="scoreboard">Length</h2>
+        </section>
         <section id="gameOver">
             <h1 class="title">OH MY GOD DID YOU JUST HIT THAT?!</h1>
-            <h3 class="restartButton">TRY AGAIN FOR NO APPARENT REASON</h3>
+            <h3 id="restartButton">TRY AGAIN FOR NO APPARENT REASON</h3>
         </section>
         <canvas id="game-screen"></canvas>
          <script src="js/Snake.js"></script>
